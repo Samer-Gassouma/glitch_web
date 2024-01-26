@@ -25,7 +25,7 @@ export default  function Add () {
         alert("Subject Added Successfully");
         setsubjectName("");
         }
-        catch (error) {
+       catch (error: any) {
             alert(error.message);
         }
         finally {

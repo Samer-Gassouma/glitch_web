@@ -13,17 +13,17 @@ import {
 export default  function Add () {
     const searchParams = useSearchParams()
     const [resourceName, setResourceName] = useState("");
-    const [selectedSubject, setSelectedSubject] = useState([]);
-    const [subjects, setSubjects] = useState([]);
+    const [selectedSubject, setSelectedSubject] = useState([] as any);
+    const [subjects, setSubjects] = useState([] as any);;
     const [visibilityMode, setVisibilityMode] = useState("Read" as "Read" | "Download");
-    const [file, setFile] = useState([]);
+    const [file, setFile] = useState([] as any);;
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const  userId  = searchParams.get('userId')
     const [uploadProgress, setUploadProgress] = useState(0);
     const [progressUpload, setProgressUpload] = useState(0);
     const [downloadURL, setDownloadURL] = useState('')
-    const [folders, setFolders] = useState([])
+    const [folders, setFolders] = useState([] as any);
     const [selectedFolder, setSelectedFolder] = useState(0)
   useEffect(() => {
     fetchSubjects();
@@ -44,7 +44,7 @@ export default  function Add () {
         setSelectedFolder(data[0].FolderID)
       
       console.log(data);  // Log the fetched data
-    } catch (error) {
+    }catch (error: any) {
       console.error("Error fetching folders:", error.message || error);
     }finally {
         setLoading(false);
@@ -64,7 +64,7 @@ export default  function Add () {
       throw error;
     }
     setSubjects(data);
-    } catch (error) {
+    }catch (error: any) {
         console.error("Error fetching subjects:", error.message || error);
     }
     finally {
@@ -92,13 +92,7 @@ export default  function Add () {
           cacheControl: '3600',
           upsert: false,
           contentType: file.type,
-          onProgress: (e) => {
-            const pct = (e.loaded / e.total) * 100;
-            console.log(`Upload progress = ${e.loaded} / ${e.total} = ${pct}`);
-          },
-          onload :(e) => {
-            console.log("The transfer is complete.");
-          },
+         
         });
         console.log(data);
         if (error) {
@@ -165,7 +159,7 @@ export default  function Add () {
           }
         )
        
-    } catch (error) {
+    }catch (error: any) {
       alert(error.message);
     }
     finally {
@@ -196,7 +190,7 @@ export default  function Add () {
               onChange={(e) => setSelectedSubject(e.target.value)}
             className="select select-bordered w-full max-w-xs">
               <option>Subject</option>
-                {subjects.map((subject) => (
+                {subjects.map((subject:any) => (
                     <option key={subject.id} value={subject.id}>
                     {subject.Name}
                     </option>
@@ -205,10 +199,10 @@ export default  function Add () {
             {selectedSubject && selectedSubject.length > 0 &&
             <select 
               value={selectedFolder}
-              onChange={(e) => setSelectedFolder(e.target.value)}
-            className="select select-bordered w-full max-w-xs">
+              onChange={(e) => setSelectedFolder(Number(e.target.value))}       
+              className="select select-bordered w-full max-w-xs">
               <option>Folder</option>
-                {folders.map((folder) => (
+                {folders.map((folder:any) => (
                     <option key={folder.FolderID} value={folder.FolderID}>
                     {folder.FolderName}
                     </option>
@@ -221,7 +215,11 @@ export default  function Add () {
               <option value="Download">Download</option>
             </select>
             <input type="file" 
-            onChange={(e) => setFile(e.target.files[0])}
+            onChange={(e) => {
+              if (e.target.files) {
+                setFile(e.target.files[0]);
+              }
+            }}
 
             className="file-input file-input-bordered file-input-primary w-full max-w-xs" />
            

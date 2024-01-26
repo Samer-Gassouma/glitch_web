@@ -6,10 +6,10 @@ import { supabase} from '../../../utils/supabase/client';
 
 export default  function Add () {
     const [FolderName, setFolderName] = useState("");
-    const [subjects, setSubjects] = useState([]);
-    const [selectedSubject, setSelectedSubject] = useState([]);
-    const [ParentFolder, setParentFolder] = useState([]);
-    const [selectedParentFolder, setSelectedParentFolder] = useState([]);
+    const [subjects, setSubjects] = useState([] as any);
+    const [selectedSubject, setSelectedSubject] = useState([] as any);
+    const [ParentFolder, setParentFolder] = useState([] as any);
+    const [selectedParentFolder, setSelectedParentFolder] = useState([] as any);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
@@ -29,7 +29,7 @@ export default  function Add () {
       throw error;
     }
     setSubjects(data);
-    } catch (error) {
+    }catch (error: any) {
         console.error("Error fetching subjects:", error.message || error);
     }
     finally {
@@ -46,7 +46,7 @@ export default  function Add () {
     }
     console.log(data);
     setParentFolder(data);
-    } catch (error) {
+    }catch (error: any) {
         console.error("Error fetching subjects:", error.message || error);
     }
     finally {
@@ -74,7 +74,7 @@ export default  function Add () {
         setSelectedSubject([]);
         setSelectedParentFolder([]);
         alert("Folder Added Successfully");
-      } catch (error) {
+      }catch (error: any) {
           console.error("Error fetching subjects:", error.message || error);
       }
       finally {
@@ -106,7 +106,7 @@ export default  function Add () {
             <select className="select select-bordered w-full max-w-xs" value={selectedParentFolder} onChange={(e) => setSelectedParentFolder(e.target.value as "Read" | "Download")}>
               <option>ParentFolder</option>
               <option value="">None</option>
-              {ParentFolder.map((PFolder) => (
+              {ParentFolder.map((PFolder : any) => (
                     <option key={PFolder.FolderID} value={PFolder.FolderID}>
                     {PFolder.FolderName}
                     </option>
@@ -118,7 +118,7 @@ export default  function Add () {
               onChange={(e) => setSelectedSubject(e.target.value)}
             className="select select-bordered w-full max-w-xs">
               <option>Subject</option>
-                {subjects.map((subject) => (
+                {subjects.map((subject:any) => (
                     <option key={subject.id} value={subject.id}>
                     {subject.Name}
                     </option>

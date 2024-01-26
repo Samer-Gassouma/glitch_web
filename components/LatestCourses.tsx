@@ -12,24 +12,16 @@ interface Course {
 }
 
 const LatestCourses: React.FC = () => {
-  const [courses, setCourses] = useState<Course[]>([]);
+  const [courses, setCourses] = useState<Course[]>([] as any);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState('');
-  const [user, setUser] = useState([]);
   useEffect(() => {
-    if (typeof localStorage !== 'undefined') {
-      setUser(JSON.parse(localStorage.getItem('userData')))
-    } else if (typeof sessionStorage !== 'undefined') {
-      setUser(JSON.parse(sessionStorage.getItem('userData')));
-    } else {
-      console.log('Web Storage is not supported in this environment.');
-    }
-    console.log("user", user);
+   
     const fetchCourses = async () => {
       try {
         const { data, error } = await supabase
-          .from<Course>('Resources')
+          .from('Resources')
           .select('*')
           .order('created_at', { ascending: false })
           .limit(5);
@@ -37,7 +29,7 @@ const LatestCourses: React.FC = () => {
           throw error;
         }
         setCourses(data || []);
-      } catch (error) {
+      }catch (error: any) {
         setError(true);
         setMessage(error.message);
       } finally {

@@ -9,11 +9,11 @@ import Link from 'next/link';
 const SubjectDetails = () => {
   
   const router = useRouter();
-  const [Resources, setResources] = useState([]);
+  const [Resources, setResources] = useState([] as any);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState('');
-  const [folders, setFolders] = useState([]);
+  const [folders, setFolders] = useState([] as any);
   
 
   
@@ -27,12 +27,12 @@ const SubjectDetails = () => {
         .select("*")
         .eq("FolderID", id);
 
-        setResources(data);
+        setResources(data || []);
 
         if (error) {
           throw error;
         }
-      } catch (error) {
+      } catch (error: any) {
         setError(true);
         setMessage(error.message);
       } finally {
@@ -49,7 +49,7 @@ const SubjectDetails = () => {
           throw error;
         }
         setFolders(data || []);
-      } catch (error) {
+      } catch (error: any) {
         setError(true);
         setMessage(error.message);
       } finally {
@@ -64,14 +64,12 @@ const SubjectDetails = () => {
 
 
   }, []);
-  console.log(Resources);
 
-  Resources.map((resource) => {
+  Resources.map((resource : any) => {
     resource.is_folder = false;
   });
 
-  console.log(folders);
-  folders.map((folder) => {
+  folders.map((folder:any) => {
     folder.is_folder = true;
   });
   

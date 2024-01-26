@@ -3,14 +3,14 @@ import React from 'react'
 import { usePathname, useRouter,redirect } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/utils/supabase/client';
-import { saveAs } from 'file-saver';
+import { saveAs} from 'file-saver' 
 import Link from 'next/link';
 
 export default function ResourcePage() {
 
 
   const id  = usePathname().replace("/Subjects/", "").split("/")[1]
-  const [Resource, setResource] = useState([]);
+  const [Resource, setResource] = useState([] as any);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState('');
@@ -32,7 +32,7 @@ export default function ResourcePage() {
         if (error) {
           throw error;
         }
-      } catch (error) {
+      }catch (error: any) {
         setError(true);
         setMessage(error.message);
       } finally {
@@ -82,7 +82,7 @@ export default function ResourcePage() {
           throw error;
         }
         alert("Resource deleted successfully");
-      } catch (error) {
+      }catch (error: any) {
         console.error("Error deleting file:", error.message || error);
       }
       finally {

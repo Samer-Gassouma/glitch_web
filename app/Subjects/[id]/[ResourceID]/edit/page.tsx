@@ -6,10 +6,10 @@ import { supabase } from '@/utils/supabase/client';
 const Edit = () => {
   const id = usePathname().replace("/Subjects/", "").split("/")[1];
   const [fileName, setFileName] = useState('');
-  const [selectedSubject, setSelectedSubject] = useState([]);
-  const [subjects, setSubjects] = useState([]);
-  const [visibility, setVisibility] = useState([]);
-  const [item, setItem] = useState([]);
+  const [selectedSubject, setSelectedSubject] = useState([] as any);
+  const [subjects, setSubjects] = useState([] as any);
+  const [visibility, setVisibility] = useState([] as any);
+  const [item, setItem] = useState([] as any);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState('');
@@ -30,7 +30,7 @@ const Edit = () => {
       } else {
         setSubjects(data);
       }
-    } catch (error) {
+    }catch (error: any) {
       console.error("Error fetching subjects:", error.message || error);
     }finally {
       setLoading(false);
@@ -52,7 +52,7 @@ const Edit = () => {
         setFileName(data.ResourceName); 
         setVisibility(data.VisibilityMode);
       }
-    } catch (error) {
+    }catch (error: any) {
       console.error("Error fetching file:", error.message || error);
     }finally
     {
@@ -86,7 +86,7 @@ const Edit = () => {
         setMessage("File details updated successfully!");
         
       }
-    } catch (error) {
+    }catch (error: any) {
       console.error("Error updating file details:", error.message || error);
     }
   };
@@ -120,7 +120,7 @@ const Edit = () => {
               onChange={(e) => setSelectedSubject(e.target.value)}
             className="select select-bordered w-full max-w-xs">
               <option>Subject</option>
-                {subjects.map((subject) => (
+                {subjects.map((subject:any) => (
                     <option key={subject.id} value={subject.id}>
                     {subject.Name}
                     </option>
