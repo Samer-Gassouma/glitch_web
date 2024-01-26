@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 export default async function AuthButton() {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
-
+  
   const {
     data: { user },
   } = await supabase.auth.getUser();
