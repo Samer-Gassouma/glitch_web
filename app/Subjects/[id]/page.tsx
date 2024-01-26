@@ -3,7 +3,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/utils/supabase/client';
 import Link from 'next/link';
-
+  
 
 
 const SubjectDetails = () => {
@@ -89,10 +89,40 @@ const SubjectDetails = () => {
   if (!Resources && !folders) {
     return <p>Resources not found</p>;
   }
+  const handleDelete = async () => {
+    try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from("subjects")
+          .delete()
+          .match({ id: id});
+        if (error) {
+          throw error;
+        }
+        alert("Resource deleted successfully");
+      }catch (error: any) {
+        console.error("Error deleting file:", error.message || error);
+      }
+      finally {
+        setLoading(false);
+      } 
+    };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mt-7">
+      <div className="flex justify-between items-center">
       <h1 className="text-3xl font-bold text-center mb-8">Resources</h1>
+        <div className="flex space-x-4">
+      <p className="text-xl font-bold text-center mb-8">Modify this Subject Page : </p>
+      
+          <button className="btn btn-active btn-accent"onClick={
+            () => router.push(`/Subjects/${id}/edit`)
+          } >Edit</button>
+      
+          <button className="btn btn-error" onClick={handleDelete} >Delete</button>
+        </div>
+      </div>  
+     
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {resources.map((R) => (
           R.is_folder == false ?
@@ -112,7 +142,7 @@ const SubjectDetails = () => {
                   </p>
                 </div>
                 <div className="ps-3">
-                  <svg className="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                  <svg className="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
                 </div>
               </div>
             </div>
@@ -135,7 +165,7 @@ const SubjectDetails = () => {
                   </p>
                 </div>
                 <div className="ps-3">
-                  <svg className="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                  <svg className="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
                 </div>
               </div>
             </div>

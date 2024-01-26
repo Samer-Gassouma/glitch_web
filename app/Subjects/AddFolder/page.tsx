@@ -44,7 +44,6 @@ export default  function Add () {
     if (error) {
       throw error;
     }
-    console.log(data);
     setParentFolder(data);
     }catch (error: any) {
         console.error("Error fetching subjects:", error.message || error);

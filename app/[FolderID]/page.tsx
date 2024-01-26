@@ -18,7 +18,6 @@ const SubjectDetails = () => {
 
   
   const id  = usePathname().replace('/', '');
-  console.log(id);
   useEffect(() => {
     const fetchSubject = async () => {
       try {
@@ -86,12 +85,40 @@ const SubjectDetails = () => {
   if (error) {
     return <p>{message}</p>;
   }
+ 
 
+  const handleDelete = async () => {
+    try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from("folders")
+          .delete()
+          .match({ FolderID: id});
+        if (error) {
+          throw error;
+        }
+        alert("folder deleted successfully");
+      }catch (error: any) {
+        console.error("Error deleting file:", error.message || error);
+      }
+      finally {
+        setLoading(false);
+      } 
+    };
 
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mt-7">
       <h1 className="text-3xl font-bold text-center mb-8">Resources</h1>
+      <div className="flex space-x-4">
+      <p className="text-xl font-bold text-center mb-8">Modify this folder Page : </p>
+      
+          <button className="btn btn-active btn-accent"onClick={
+            () => router.push(`/${id}/edit`)
+          } >Edit</button>
+      
+          <button className="btn btn-error" onClick={handleDelete} >Delete</button>
+        </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {resources.length == 0 ? <p className='flex justify-center items-center text-3xl '> No Resources</p> : null}
         {resources.map((R) => (
@@ -112,7 +139,7 @@ const SubjectDetails = () => {
                   </p>
                 </div>
                 <div className="ps-3">
-                  <svg className="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                  <svg className="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
                 </div>
               </div>
             </div>
@@ -135,7 +162,7 @@ const SubjectDetails = () => {
                   </p>
                 </div>
                 <div className="ps-3">
-                  <svg className="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                  <svg className="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
                 </div>
               </div>
             </div>

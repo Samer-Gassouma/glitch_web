@@ -47,8 +47,10 @@ const LatestCourses: React.FC = () => {
       {error && <p className="text-red-500 text-center">{message}</p>}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {courses.map((course) => (
-         <div className="card w-50 bg-base-100 shadow-xl">
+        {courses.map((course 
+         
+        ) => (
+         <div key={course.ResourceID} className="card w-50 bg-base-100 shadow-xl">
          <div className="card-body">
            <h2 className="card-title">{course.ResourceName}</h2>
            <p>{new Date(course.created_at).toLocaleDateString()}</p>

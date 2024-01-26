@@ -43,7 +43,6 @@ export default  function Add () {
         setLoading(false);
         setSelectedFolder(data[0].FolderID)
       
-      console.log(data);  // Log the fetched data
     }catch (error: any) {
       console.error("Error fetching folders:", error.message || error);
     }finally {
@@ -94,7 +93,6 @@ export default  function Add () {
           contentType: file.type,
          
         });
-        console.log(data);
         if (error) {
           throw error;
         }
@@ -128,7 +126,6 @@ export default  function Add () {
 
             const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
             setDownloadURL(downloadURL)
-            console.log( downloadURL);
             const { data, error } = await supabase
               .from("Resources")
               .insert([
@@ -145,7 +142,6 @@ export default  function Add () {
             if (error) {
               throw error;
             }
-            console.log(data);
             alert("Resource added successfully");
             setResourceName("");
             setSelectedSubject([]);
