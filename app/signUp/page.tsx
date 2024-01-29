@@ -49,7 +49,7 @@ export default function signup({
     if (insertError) {
       return redirect("/signUp?message=Could not authenticate user");
     }else{        
-      return redirect("/login");
+      return redirect("/login?message=Account created , just login now");
     }
     }
 
