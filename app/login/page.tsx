@@ -8,7 +8,6 @@ export default async function Login({
 }: {
   searchParams: { message: string };
 }) {
-  
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
   const {
@@ -35,7 +34,6 @@ export default async function Login({
     if (error) {
       return redirect("/login?message=Could not authenticate user");
     }
-
     return redirect("/");
   };
 

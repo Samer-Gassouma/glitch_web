@@ -117,7 +117,7 @@ const SubjectDetails = () => {
         {resources.length == 0 ? <p className='flex justify-center items-center text-3xl '> No Resources</p> : null}
         {resources.map((R) => (
           R.is_folder == false ?
-          <Link href={`/Subjects/${id}/${R.ResourceID}`} key={R.ResourceID}>
+          <Link href={`${R.URL2}`} target="_blank" key={R.ResourceID}>
           <div className="group flex flex-col bg-white border shadow-sm rounded-xl hover:shadow-md transition dark:bg-slate-900 dark:border-gray-800 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
             <div className="p-4 md:p-5">
               <div className="flex justify-between items-center">

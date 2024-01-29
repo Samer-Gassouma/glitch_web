@@ -2,15 +2,15 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/utils/supabase/client';
 import Link from 'next/link';
-import { getCookie } from 'cookies-next';
 
 const LatestCourses: React.FC = () => {
+
+
   const [courses, setCourses] = useState([] as any);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState('');
   useEffect(() => {
-   
     const fetchCourses = async () => {
       try {
         const { data: resourcesData, error: resourcesError } = await supabase
@@ -72,7 +72,7 @@ const LatestCourses: React.FC = () => {
               folder : {course.folder && course.folder.FolderName ? course.folder.FolderName : 'No Path'}
            </p >
            <div className="card-actions justify-end">
-            <Link href={`/Subjects/${course.SubjectID}/${course.ResourceID}`} key={course.ResourceID}> 
+            <Link href={`${course.URL2}`}  target="_blank" key={course.ResourceID}> 
              <button className="btn btn-primary">Check this Course </button>
               </Link>
            </div>
