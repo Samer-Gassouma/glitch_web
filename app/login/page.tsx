@@ -26,6 +26,7 @@ export default async function Login({
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
 
+    try{
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -35,6 +36,11 @@ export default async function Login({
       return redirect("/login?message=Could not authenticate user");
     }
     return redirect("/");
+    }
+    catch(err){
+      return redirect("/login?message=Could not authenticate user");
+    }
+    
   };
 
 

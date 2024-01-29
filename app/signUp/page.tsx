@@ -27,7 +27,7 @@ export default async function signup({
     const password = formData.get("password") as string;
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
-
+    try{
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -35,32 +35,48 @@ export default async function signup({
         emailRedirectTo: `${origin}/auth/callback`,
       },
     }); 
-
-    
   
     if (error) {
       return redirect("/signUp?message=Could not authenticate user error 551");
     }else{ 
+      try{
       const {
         data: { user },
       } = await supabase.auth.getUser();
 
-      const { data, error: insertError } = await supabase
-      .from("users")
-      .insert([
-        {
-          id : user?.id,
-          email: email,
-          is_admin: false,
-        },
-      ]);
+      if (!user) {
+        return redirect("/signUp?message=Could not authenticate ERROR554 CONTACT ADMIN");
+      }
 
-    if (insertError) {
-      return redirect("/signUp?message=Could not authenticate user error 552");
-    }else{        
-      return redirect("/login?message=Account created,just login now");
+      try{
+          const { data, error: insertError } = await supabase
+          .from("users")
+          .insert([
+            {
+              id : user?.id,
+              email: email,
+              is_admin: false,
+            },
+          ]);
+
+          if (insertError) {
+            return redirect("/signUp?message=Could not authenticate user error 552");
+          }else{        
+            return redirect("/login?message=Account created,just login now");
+          }
+        }catch(error){
+          return redirect("/signUp?message=Could not authenticate user error 553");
+        }
+
+    }
+    catch(error){
+      return redirect("/signUp?message=Could not authenticate user error 553");
     }
     }
+  }catch(error){
+    return redirect("/signUp?message=Could not authenticate user error 553");
+  }
+
 
   };
 
