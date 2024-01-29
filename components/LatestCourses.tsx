@@ -3,16 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '@/utils/supabase/client';
 import Link from 'next/link';
 import { getCookie } from 'cookies-next';
-interface Course {
-  ResourceID: string;
-  ResourceName: string;
-  URL2: string;
-  created_at: string;
-  SubjectID: string;
-}
 
 const LatestCourses: React.FC = () => {
-  const [courses, setCourses] = useState<Course[]>([] as any);
+  const [courses, setCourses] = useState([] as any);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState('');
@@ -20,24 +13,47 @@ const LatestCourses: React.FC = () => {
    
     const fetchCourses = async () => {
       try {
-        const { data, error } = await supabase
-          .from('Resources')
-          .select('*')
-          .order('created_at', { ascending: false })
-          .limit(5);
-        if (error) {
-          throw error;
-        }
-        setCourses(data || []);
-      }catch (error: any) {
+        const { data: resourcesData, error: resourcesError } = await supabase
+        .from('Resources')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(5);
+  
+      if (resourcesError) {
+        throw resourcesError;
+      }
+  
+      const folderIDs = resourcesData.map(resource => resource.FolderID);
+      const { data: foldersData, error: foldersError } = await supabase
+        .from('folders')
+        .select('*')
+        .in('FolderID', folderIDs);
+  
+      if (foldersError) {
+        throw foldersError;
+      }
+  
+      const combinedData = resourcesData.map(resource => ({
+        ...resource,
+        folder: foldersData.find(folder => folder.FolderID === resource.FolderID),
+      }));
+    
+      setCourses(combinedData);
+      } catch (error: any) {
         setError(true);
         setMessage(error.message);
       } finally {
         setLoading(false);
       }
     };
+    
     fetchCourses();
+  
   }, []);
+
+  
+  
+ 
 
   return (
     <div className="container mx-auto p-16 mt-10">
@@ -47,13 +63,14 @@ const LatestCourses: React.FC = () => {
       {error && <p className="text-red-500 text-center">{message}</p>}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {courses.map((course 
-         
-        ) => (
+        {courses.map((course :any) => (
          <div key={course.ResourceID} className="card w-50 bg-base-100 shadow-xl">
          <div className="card-body">
            <h2 className="card-title">{course.ResourceName}</h2>
            <p>{new Date(course.created_at).toLocaleDateString()}</p>
+           <p className='text-sm '>
+              folder : {course.folder && course.folder.FolderName ? course.folder.FolderName : 'No Path'}
+           </p >
            <div className="card-actions justify-end">
             <Link href={`/Subjects/${course.SubjectID}/${course.ResourceID}`} key={course.ResourceID}> 
              <button className="btn btn-primary">Check this Course </button>
