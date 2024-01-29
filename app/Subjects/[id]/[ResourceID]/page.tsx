@@ -14,7 +14,7 @@ export default function ResourcePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState('');
-
+  const router = useRouter();
 
   
   
@@ -64,6 +64,7 @@ export default function ResourcePage() {
 
   const handleRead = () => {
     window.open(Resource.URL2, '_blank');
+    router.back();
   };
   
   const handleDownload = () => {

@@ -20,6 +20,7 @@ const SubjectDetails = () => {
   const id  = usePathname().replace("/Subjects/", "")
   
   useEffect(() => {
+    /*
     const fetchSubject = async () => {
       try {
         const { data, error } = await supabase
@@ -38,6 +39,8 @@ const SubjectDetails = () => {
         setLoading(false);
       }
     };
+
+    */
     const fetchFolders = async () => {
       try {
         const { data, error } = await supabase
@@ -59,20 +62,21 @@ const SubjectDetails = () => {
     if(id){
       
       fetchFolders()
-      fetchSubject()
+      //fetchSubject()
     }
 
 
   }, []);
-  Resources.map((resource :any) => {
+ /* Resources.map((resource :any) => {
     resource.is_folder = false;
-  });
+  });*/
 
   folders.map((folder : any) => {
     folder.is_folder = true;
   });
   
   const resources = [...folders, ...Resources];
+  console.log(resources);
  if (loading) {
     return (
       <div className="flex flex-col items-center justify-center w-screen min-h-screen  py-2 px-4">
@@ -125,6 +129,7 @@ const SubjectDetails = () => {
      
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {resources.map((R) => (
+          /*
           R.is_folder == false ?
           <Link href={`/Subjects/${id}/${R.ResourceID}`} key={R.ResourceID}>
           <div className="group flex flex-col bg-white border shadow-sm rounded-xl hover:shadow-md transition dark:bg-slate-900 dark:border-gray-800 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
@@ -148,7 +153,7 @@ const SubjectDetails = () => {
             </div>
           </div>
         </Link>
-          :
+          :*/
           <Link href={`/${R.FolderID}`} key={R.FolderID}>
           <div className="group flex flex-col bg-blue-200 border shadow-sm rounded-xl hover:shadow-md transition dark:bg-slate-900 dark:border-gray-800 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
             <div className="p-4 md:p-5">

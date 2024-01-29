@@ -2,6 +2,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import LatestCourses from "@/components/LatestCourses";
+import Link from "next/link";
 
 export default async function Index() {
   const cookieStore = cookies();
@@ -21,6 +22,8 @@ export default async function Index() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+ 
   return (
     <div className="flex-1 w-full flex flex-col items-center">
       <div className="overflow-y-hidden h-screen flex-1">
@@ -31,6 +34,7 @@ export default async function Index() {
             <p className="text-xl text-center">
               A place where you can learn and share your knowledge with others.
             </p>
+            
             <p className="text-xl text-center">
               Start by adding a subject, a folder or a course.
             </p>
@@ -41,7 +45,14 @@ export default async function Index() {
             href="/login"
             className="text-blue-500 hover:underline cursor-pointer font-bold"
             >Login</a> First </span>
+           
+              <p className="text-xl text-center mt-4 font-bold">
+                  WE ARE STILL IN BETA SO PLEASE REPORT ANY BUGS YOU FIND
+              </p>
+              
+
           </div>
+            
         </div>
         :
         <LatestCourses />
