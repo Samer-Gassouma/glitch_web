@@ -36,9 +36,7 @@ export default async function Index() {
               A place where you can learn and share your knowledge with others.
             </p>
             
-            <p className="text-xl text-center">
-              Start by adding a subject, a folder or a course.
-            </p>
+           
             <span 
             className="text-xl text-center mt-4"
             >But you Need to{" "}
