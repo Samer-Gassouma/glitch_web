@@ -115,16 +115,7 @@ const SubjectDetails = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mt-7">
       <div className="flex justify-between items-center">
       <h1 className="text-3xl font-bold text-center mb-8">Resources</h1>
-        <div className="flex space-x-4">
-      
-      <p className="text-xl font-bold text-center mb-8">Modify this Subject Page : </p>
-      
-          <button className="btn btn-active btn-accent"onClick={
-            () => router.push(`/Subjects/${id}/edit`)
-          } >Edit</button>
-      
-          <button className="btn btn-error" onClick={handleDelete} >Delete</button>
-        </div>
+        
       </div>  
      
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

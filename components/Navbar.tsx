@@ -48,7 +48,7 @@ export default async function Navbar() {
             
           </div>
         </Link>
-        {user && userAdmin != null && (
+        {user && userAdmin == true && (
           <>
         <DeployButton Name='Add Course' path='/Subjects/Add' userId={user.id}/>
         <DeployButton Name='Add Folder' path='/Subjects/AddFolder' userId={user.id} />
