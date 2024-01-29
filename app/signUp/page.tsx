@@ -30,7 +30,7 @@ export default function signup({
     
   
     if (error) {
-      return redirect("/signUp?message=Could not authenticate user");
+      return redirect("/signUp?message=Could not authenticate user error 551");
     }else{ 
       const {
         data: { user },
@@ -47,9 +47,9 @@ export default function signup({
       ]);
 
     if (insertError) {
-      return redirect("/signUp?message=Could not authenticate user");
+      return redirect("/signUp?message=Could not authenticate user error 552");
     }else{        
-      return redirect("/login?message=Account created , just login now");
+      return redirect("/login?message=Account created,just login now");
     }
     }
 
