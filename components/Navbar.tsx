@@ -5,6 +5,7 @@ import Image from "next/image";
 import GlitchLogo from "../app/assets/logo-no-background.png";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 
 export default async function Navbar() {
   const cookieStore = cookies();
@@ -24,6 +25,7 @@ export default async function Navbar() {
     throw fetchError;
   }
 }
+
   return (
     <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16 fixed top-0 z-10">
       <div className="w-full max-w-4xl flex justify-between items-center p-3 text-sm ">
@@ -51,6 +53,7 @@ export default async function Navbar() {
         <DeployButton Name='Add Course' path='/Subjects/Add' userId={user.id}/>
         <DeployButton Name='Add Folder' path='/Subjects/AddFolder' userId={user.id} />
         <DeployButton Name='Add Subject' path='/Subjects/AddSubject' userId={user.id}/>
+     
         </>
         )}
         <AuthButton />

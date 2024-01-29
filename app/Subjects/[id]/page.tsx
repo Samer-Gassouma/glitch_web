@@ -116,6 +116,7 @@ const SubjectDetails = () => {
       <div className="flex justify-between items-center">
       <h1 className="text-3xl font-bold text-center mb-8">Resources</h1>
         <div className="flex space-x-4">
+      
       <p className="text-xl font-bold text-center mb-8">Modify this Subject Page : </p>
       
           <button className="btn btn-active btn-accent"onClick={
