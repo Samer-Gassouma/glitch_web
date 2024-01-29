@@ -76,7 +76,6 @@ const SubjectDetails = () => {
   });
   
   const resources = [...folders, ...Resources];
-  console.log(resources);
  if (loading) {
     return (
       <div className="flex flex-col items-center justify-center w-screen min-h-screen  py-2 px-4">
