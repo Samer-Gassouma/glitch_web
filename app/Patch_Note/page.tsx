@@ -22,9 +22,15 @@ export default function DownloadApp() {
         <h1 className="text-2xl font-bold mb-4">Download App</h1>
         <p className="mb-2"><span className="font-bold">Version:</span> {appVersion}</p>
         <p className="mb-4"><span className="font-bold">Patch Notes:</span> {patchNotes}</p>
+        <p className="mb-4">Download the latest version of the app for android.<span className='
+          text-red-500'>
+            (ios coming soon)
+          </span></p>
         <a href="https://expo.dev/artifacts/eas/qmVmNZAe7g7cScL5vxWhL6.apk" className="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer transition-colors duration-200 ease-in-out">
           Download
         </a>
+       
+        <p className="mt-4">Note: You may need to enable <span className="font-bold">"Install unknown apps"</span> in your phone settings to install the app.</p>
       </div>
     </div>
   )
