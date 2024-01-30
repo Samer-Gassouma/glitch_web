@@ -57,6 +57,13 @@ export default async function Navbar() {
         </>
         )}
         <AuthButton />
+        <div className="flex items-center">
+        <Link href="/Patch_Note">
+          <div className="inline-flex items-center bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded cursor-pointer transition-colors duration-200 ease-in-out">
+            Download APP
+          </div>
+        </Link>
+  </div>
       </div>
     </nav>
   )
