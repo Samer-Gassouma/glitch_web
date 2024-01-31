@@ -1,6 +1,7 @@
+"use client"
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { headers, cookies } from "next/headers";
-import { createClient } from "@/utils/supabase/server";
+import { supabase } from "@/utils/supabase/client";
 import { redirect } from "next/navigation";
 
 export default async function signup({
@@ -8,8 +9,7 @@ export default async function signup({
 }: {
   searchParams: { message: string };
 }) {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -20,41 +20,31 @@ export default async function signup({
 
 
   const signUp = async (formData: FormData) => {
-    "use server";
 
-    const origin = headers().get("origin");
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    const origin = window.location.origin;
     try{
-    const { error } = await supabase.auth.signUp({
+    const { data,error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: `${origin}/auth/callback`,
       },
     }); 
-  
+    console.log(data.user)
     if (error) {
       return redirect("/signUp?message=Could not authenticate user error 551");
     }else{ 
-      try{
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        return redirect("/signUp?message=Could not authenticate ERROR554 CONTACT ADMIN");
-      }
+      
 
       try{
-          const { data, error: insertError } = await supabase
+          const { data:userData, error: insertError } = await supabase
           .from("users")
           .insert([
             {
-              id : user?.id,
-              email: email,
+              id : data.user?.id,
+              email: data.user?.email,
               is_admin: false,
             },
           ]);
@@ -62,19 +52,20 @@ export default async function signup({
           if (insertError) {
             return redirect("/signUp?message=Could not authenticate user error 552");
           }else{        
-            return redirect("/login?message=Account created,just login now");
+            return redirect("/login?check your email to verify your account");
           }
         }catch(error){
+          console.log(error)
           return redirect("/signUp?message=Could not authenticate user error 553");
         }
 
     }
-    catch(error){
-      return redirect("/signUp?message=Could not authenticate user error 553");
-    }
-    }
+   
+    
   }catch(error){
-    return redirect("/signUp?message=Could not authenticate user error 553");
+    console.log(error)
+
+    return redirect("/login?message=check your email to verify your account");
   }
 
 

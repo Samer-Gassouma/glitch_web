@@ -3,6 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import LatestCourses from "@/components/LatestCourses";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default async function Index() {
   const cookieStore = cookies();
@@ -23,7 +24,7 @@ export default async function Index() {
     data: { user },
   } = await supabase.auth.getUser();
 
-
+ 
  
   return (
     <div className="flex-1 w-full flex flex-col items-center">
