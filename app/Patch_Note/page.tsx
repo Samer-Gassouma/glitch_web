@@ -1,37 +1,63 @@
 "use client"
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
+import { supabase } from "@/utils/supabase/client";
 
 export default function DownloadApp() {
-  const [appVersion, setAppVersion] = useState('1.0.0');
-  const [patchNotes, setPatchNotes] = useState('Initial release');
+  const [loading, setLoading] = useState(true);
+  const [appData, setAppData] = useState([]);
 
-  /* useEffect(() => {
-    // Fetch the latest app version and patch notes from your API
-    // This is just a placeholder, replace it with your actual API call
-    fetch('/api/app-info')
-      .then(response => response.json())
-      .then(data => {
-        setAppVersion(data.version);
-        setPatchNotes(data.patchNotes);
-      });
-  }, []); */
+  useEffect(() => {
+    async function fetchAppData() {
+      try {
+        const { data: appData, error } = await supabase
+          .from('app')
+          .select('*')
+        if (error) {
+          throw error;
+        }
+        setAppData(appData);
+        setAppData(
+          appData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        );
+      } catch (error) {
+        console.error('Error fetching app data:', error.message);
+      } finally {
+        setLoading(false);
+      }
+      
+    }
+    fetchAppData();
+  }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen  py-2">
-      <div className="p-8 shadow-lg rounded-lg">
-        <h1 className="text-2xl font-bold mb-4">Download App</h1>
-        <p className="mb-2"><span className="font-bold">Version:</span> {appVersion}</p>
-        <p className="mb-4"><span className="font-bold">Patch Notes:</span> {patchNotes}</p>
-        <p className="mb-4">Download the latest version of the app for android.<span className='
-          text-red-500'>
-            (ios coming soon)
-          </span></p>
-        <a href="https://expo.dev/artifacts/eas/qmVmNZAe7g7cScL5vxWhL6.apk" className="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer transition-colors duration-200 ease-in-out">
-          Download
-        </a>
-       
-        <p className="mt-4">Note: You may need to enable <span className="font-bold">"Install unknown apps"</span> in your phone settings to install the app.</p>
+    <div className="flex flex-col items-center justify-center min-h-screen py-2 ">
+      <div className="p-8 shadow-lg rounded-lg bg-black max-w-lg w-full">
+        <h1 className="text-3xl font-bold mb-4 text-center">Download App</h1>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <>
+            <ul className="space-y-4">
+              {appData.map((app) => (
+                <li key={app.id} className="border p-4 rounded shadow">
+                  <p className="mb-2"><span className="font-bold">Version:</span> {app.version} <span className='
+                  text-sm text-gray-400 font-normal'>  released on : {' '}
+                     {new Date(app.created_at).toLocaleDateString()}</span>   </p> 
+                  <p className="mb-4"><span className="font-bold">Patch Notes:</span> {app.patchNotes}</p>
+                  <a href={app.url} 
+                    className="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer transition-colors duration-200 ease-in-out">
+                    Download
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-4 text-center">Download the latest version of the app for Android.
+              <span className="text-red-500"> (iOS coming soon)</span>
+            </p>
+            <p className="mt-4 text-sm text-gray-400">Note: You may need to enable <span className="font-bold">"Install unknown apps"</span> in your phone settings to install the app.</p>
+          </>
+        )}
       </div>
     </div>
-  )
+  );
 }
