@@ -21,6 +21,7 @@ export default function DownloadApp() {
         const { data: appData, error } = await supabase
           .from('app')
           .select('*')
+          .order('created_at', { ascending: false });
         if (error) {
           throw error;
         }
