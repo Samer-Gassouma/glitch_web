@@ -3,8 +3,17 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from "@/utils/supabase/client";
 
 export default function DownloadApp() {
+
+  interface AppData {
+    id: number;
+    version: string;
+    patchNotes: string;
+    url: string;
+    created_at: string;
+  }
+
   const [loading, setLoading] = useState(true);
-  const [appData, setAppData] = useState([]);
+  const [appData, setAppData] = useState([] as any);
 
   useEffect(() => {
     async function fetchAppData() {
@@ -16,11 +25,8 @@ export default function DownloadApp() {
           throw error;
         }
         setAppData(appData);
-        setAppData(
-          appData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-        );
       } catch (error) {
-        console.error('Error fetching app data:', error.message);
+        console.error('Error fetching app data:', (error as Error).message);
       } finally {
         setLoading(false);
       }
@@ -38,7 +44,7 @@ export default function DownloadApp() {
         ) : (
           <>
             <ul className="space-y-4">
-              {appData.map((app) => (
+            {appData.map((app: AppData) => (
                 <li key={app.id} className="border p-4 rounded shadow">
                   <p className="mb-2"><span className="font-bold">Version:</span> {app.version} <span className='
                   text-sm text-gray-400 font-normal'>  released on : {' '}
