@@ -2,22 +2,13 @@
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import LatestCourses from "@/components/LatestCourses";
-import Link from "next/link";
-import { redirect } from "next/navigation";
+
 
 export default async function Index() {
   const cookieStore = cookies();
 
-  const canInitSupabaseClient = () => {
-    try {
-      createClient(cookieStore);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  };
+ 
 
-  const isSupabaseConnected = canInitSupabaseClient();
   const supabase = createClient(cookieStore);
   
   const {
@@ -27,8 +18,8 @@ export default async function Index() {
  
  
   return (
-    <div className="flex-1 w-full flex flex-col items-center">
-      <div className="overflow-y-hidden h-screen flex-1 bg-black">
+    <div className="flex-1 w-full flex flex-col items-center  bg-black">
+      <div className="overflow-y-hidden h-screen flex-1">
      {!user ? 
         <div className="flex items-center justify-center h-screen">
         <div className="flex flex-col items-center">

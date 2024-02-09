@@ -9,6 +9,7 @@ import {
   getDownloadURL,
   listAll,
 } from "firebase/storage";
+import FolderStructure from '../folder_path/FolderStructure';
 
 export default  function Add () {
     const searchParams = useSearchParams()
@@ -23,37 +24,13 @@ export default  function Add () {
     const [uploadProgress, setUploadProgress] = useState(0);
     const [progressUpload, setProgressUpload] = useState(0);
     const [downloadURL, setDownloadURL] = useState('')
-    const [folders, setFolders] = useState([] as any);
-    const [selectedFolder, setSelectedFolder] = useState(0)
+    const [currentFolderSelected , setCurrentFolderSelected] = useState({} as any);
+
   useEffect(() => {
     fetchSubjects();
-   
-
   }, []);
 
-  const fetchFolders = async (selectedSubject : any) => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase.from('folders').select('*').eq('SubjectID', selectedSubject);
-      if (error) {
-        throw error;
-      }
-      
-        setFolders(data);
-        setLoading(false);
-        setSelectedFolder(data[0].FolderID)
-      
-    }catch (error: any) {
-      console.error("Error fetching folders:", error.message || error);
-    }finally {
-        setLoading(false);
-    }
-  }
-  useEffect(() => {
-    if (selectedSubject != 'Subject') {
-      fetchFolders(selectedSubject);
-    }
-  }, [selectedSubject]);
+
 
   const fetchSubjects = async () => {
    
@@ -133,7 +110,7 @@ export default  function Add () {
                   ResourceName: resourceName,
                   SubjectID: selectedSubject,
                   URL: filePath,
-                  FolderID: selectedFolder ,
+                  FolderID: currentFolderSelected.id ,
                   VisibilityMode: visibilityMode,
                   UserID: userId,
                   URL2: downloadURL,
@@ -150,8 +127,7 @@ export default  function Add () {
             setUploadProgress(0);
             setProgressUpload(0);
             setDownloadURL('')
-            setFolders([])
-            setSelectedFolder(0)
+            setCurrentFolderSelected({});
           }
         )
        
@@ -171,6 +147,28 @@ export default  function Add () {
     );
 ;
   }
+
+  const ManageOpen = () => {
+    const dialogElement = document.getElementById('fold11');
+
+    if (dialogElement instanceof HTMLDialogElement) {
+      dialogElement.showModal();
+    } else {
+      console.error('Element is not a dialog');
+    }
+
+  }
+
+  const ManageClose = () => {
+    const dialogElement = document.getElementById('fold11');
+
+    if (dialogElement instanceof HTMLDialogElement) {
+      dialogElement.close();
+    } else {
+      console.error('Element is not a dialog');
+    }
+  }
+
 
   return (
     <div className="flex flex-col items-center justify-center w-screen min-h-screen bg-gray-900 py-2 px-4">
@@ -192,19 +190,18 @@ export default  function Add () {
                     </option>
                 ))}
             </select>
-            {selectedSubject && selectedSubject.length > 0 &&
-            <select 
-              value={selectedFolder}
-              onChange={(e) => setSelectedFolder(Number(e.target.value))}       
-              className="select select-bordered w-full max-w-xs">
-              <option>Folder</option>
-                {folders.map((folder:any) => (
-                    <option key={folder.FolderID} value={folder.FolderID}>
-                    {folder.FolderName}
-                    </option>
-                ))}
-            </select>
-            }
+             <p>Selected Folder:  {currentFolderSelected && currentFolderSelected.name &&  <span className="text-emerald-300">{currentFolderSelected.name}</span>}</p>
+             <button className="btn" onClick={()=> ManageOpen} >open Folder Stuct</button>
+            <dialog id="fold11" className="modal">
+              <div className="modal-box">
+                <form method="dialog">
+                  <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                </form>
+                <FolderStructure currentFolderSelected={setCurrentFolderSelected} />
+                <button   onClick={()=>ManageClose}
+                className="btn btn-primary py-2 px-4 mt-4 w-full">Close</button>
+              </div>
+            </dialog>
             <select className="select select-bordered w-full max-w-xs" value={visibilityMode} onChange={(e) => setVisibilityMode(e.target.value as "Read" | "Download")}>
               <option>Visibility</option>
               <option value="Read">Read</option>

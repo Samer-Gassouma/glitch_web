@@ -1,26 +1,22 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import { supabase} from '../../../utils/supabase/client';
-
+import FolderStructure from '../folder_path/FolderStructure';
 
 
 export default  function Add () {
     const [FolderName, setFolderName] = useState("");
     const [subjects, setSubjects] = useState([] as any);
     const [selectedSubject, setSelectedSubject] = useState([] as any);
-    const [ParentFolder, setParentFolder] = useState([] as any);
-    const [selectedParentFolder, setSelectedParentFolder] = useState([] as any);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-
+    const [currentFolderSelected , setCurrentFolderSelected] = useState({} as any);
   useEffect(() => {
     fetchSubjects();
-    fetchFolder();
 
   }, []);
 
-
-
+  
   const fetchSubjects = async () => {
    
     try{
@@ -38,20 +34,6 @@ export default  function Add () {
 
   };
 
-  const fetchFolder = async () => {
-    try{
-    const { data, error } = await supabase.from('folders').select('*');
-    if (error) {
-      throw error;
-    }
-    setParentFolder(data);
-    }catch (error: any) {
-        console.error("Error fetching subjects:", error.message || error);
-    }
-    finally {
-        setLoading(false);
-    } 
-  }
 
   const handleSave = async () => {
       if(!FolderName || !selectedSubject){
@@ -59,19 +41,19 @@ export default  function Add () {
           return;
       }
       try{
-        if (selectedParentFolder.length == 0) {
-        const { data, error } = await supabase.from('folders').insert([{ FolderName: FolderName, SubjectID: selectedSubject, ParentFolderID: 0 }]);
+        if (currentFolderSelected.id == undefined) {
+        const { data, error } = await supabase.from('folders').insert([{ FolderName: FolderName, SubjectID: selectedSubject, ParentFolderID: 0}]);
           
         }
         else{
-        const { data, error } = await supabase.from('folders').insert([{ FolderName: FolderName, SubjectID: selectedSubject, ParentFolderID: selectedParentFolder }]);
+        const { data, error } = await supabase.from('folders').insert([{ FolderName: FolderName, SubjectID: selectedSubject, ParentFolderID: currentFolderSelected.id}]);
           }
         if (error) {
           throw error;
         }
         setFolderName("");
         setSelectedSubject([]);
-        setSelectedParentFolder([]);
+        setCurrentFolderSelected({});
         alert("Folder Added Successfully");
       }catch (error: any) {
           console.error("Error fetching subjects:", error.message || error);
@@ -91,7 +73,34 @@ export default  function Add () {
   }
 
   
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center w-screen min-h-screen bg-gray-900 py-2 px-4">
+        <h1 className="text-3xl font-bold text-white">Error Fetching Data</h1>
+      </div>
+    );
+  }
 
+  const ManageOpen = () => {
+    const dialogElement = document.getElementById('fold11');
+
+    if (dialogElement instanceof HTMLDialogElement) {
+      dialogElement.showModal();
+    } else {
+      console.error('Element is not a dialog');
+    }
+
+  }
+
+  const ManageClose = () => {
+    const dialogElement = document.getElementById('fold11');
+
+    if (dialogElement instanceof HTMLDialogElement) {
+      dialogElement.close();
+    } else {
+      console.error('Element is not a dialog');
+    }
+  }
 
   return (
     <div className="flex flex-col items-center justify-center w-screen min-h-screen bg-gray-900 py-2 px-4">
@@ -102,16 +111,18 @@ export default  function Add () {
         <div className="space-y-4 justify-center items-center flex flex-col">
             <input type="text" placeholder='File Name' value={FolderName} onChange={(e) => setFolderName(e.target.value)} className="input input-bordered w-full max-w-xs" />
             
-            <select className="select select-bordered w-full max-w-xs" value={selectedParentFolder} onChange={(e) => setSelectedParentFolder(e.target.value as "Read" | "Download")}>
-              <option>ParentFolder</option>
-              <option value="">None</option>
-              {ParentFolder.map((PFolder : any) => (
-                    <option key={PFolder.FolderID} value={PFolder.FolderID}>
-                    {PFolder.FolderName}
-                    </option>
-                ))}
-            </select>
-           
+            <p>Selected Folder:  {currentFolderSelected && currentFolderSelected.name &&  <span className="text-emerald-300">{currentFolderSelected.name}</span>}</p>
+            <button className="btn" onClick={()=> ManageOpen} >open Folder Stuct</button>
+            <dialog id="fold11" className="modal">
+              <div className="modal-box">
+                <form method="dialog">
+                  <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                </form>
+                <FolderStructure currentFolderSelected={setCurrentFolderSelected} />
+                <button   onClick={()=>ManageClose}
+                className="btn btn-primary py-2 px-4 mt-4 w-full">Close</button>
+              </div>
+            </dialog>
             <select 
               value={selectedSubject}
               onChange={(e) => setSelectedSubject(e.target.value)}
