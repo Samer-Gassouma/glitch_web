@@ -114,10 +114,7 @@ export default  function Add () {
             <input type="text" placeholder='File Name' value={FolderName} onChange={(e) => setFolderName(e.target.value)} className="input input-bordered w-full max-w-xs" />
             
             <p>Selected Folder:  {currentFolderSelected && currentFolderSelected.name &&  <span className="text-emerald-300">{currentFolderSelected.name}</span>}</p>
-            <button className="btn" onClick={()=>ManageOpen()
-
-          
-          }>open Folder Stuct</button>
+            <button className="btn" onClick={()=>ManageOpen()}>open Folder Stuct</button>
             <dialog id="fold11" className="modal">
               <div className="modal-box">
                 <form method="dialog">

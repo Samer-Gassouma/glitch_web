@@ -22,7 +22,7 @@ export default async function  RootLayout({
 }) {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
-
+  let is_admin = false;
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -31,6 +31,16 @@ export default async function  RootLayout({
   if (!user) {
     redirect("/login?message=You need to login first");
   } else {
+    const {data : userRole} = await supabase.from('users').select('is_admin').eq('id', user.id);
+    if (userRole !== null) {
+      if (userRole[0].is_admin) {
+        is_admin = true;
+      }
+    }
+
+    if (!is_admin) {
+      redirect("/");
+    }
     return children;
   }
 

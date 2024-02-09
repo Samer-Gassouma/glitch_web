@@ -53,6 +53,7 @@ export default async function Navbar() {
         <DeployButton Name='Add Course' path='/Subjects/Add' userId={user.id}/>
         <DeployButton Name='Add Folder' path='/Subjects/AddFolder' userId={user.id} />
         <DeployButton Name='Add Subject' path='/Subjects/AddSubject' userId={user.id}/>
+        <DeployButton Name='Admin' path='/Dark_Side'/>
      
         </>
         )}
