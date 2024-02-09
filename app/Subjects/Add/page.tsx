@@ -191,14 +191,14 @@ export default  function Add () {
                 ))}
             </select>
              <p>Selected Folder:  {currentFolderSelected && currentFolderSelected.name &&  <span className="text-emerald-300">{currentFolderSelected.name}</span>}</p>
-             <button className="btn" onClick={()=> ManageOpen} >open Folder Stuct</button>
+             <button className="btn" onClick={()=> ManageOpen()} >open Folder Stuct</button>
             <dialog id="fold11" className="modal">
               <div className="modal-box">
                 <form method="dialog">
                   <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                 </form>
                 <FolderStructure currentFolderSelected={setCurrentFolderSelected} />
-                <button   onClick={()=>ManageClose}
+                <button   onClick={()=>ManageClose()}
                 className="btn btn-primary py-2 px-4 mt-4 w-full">Close</button>
               </div>
             </dialog>

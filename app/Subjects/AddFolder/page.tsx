@@ -16,6 +16,8 @@ export default  function Add () {
 
   }, []);
 
+  console.log("current ",currentFolderSelected);
+
   
   const fetchSubjects = async () => {
    
@@ -100,8 +102,8 @@ export default  function Add () {
     } else {
       console.error('Element is not a dialog');
     }
-  }
 
+  }
   return (
     <div className="flex flex-col items-center justify-center w-screen min-h-screen bg-gray-900 py-2 px-4">
       <div className="max-w-md w-full space-y-8 bg-gray-700 p-8 rounded-md shadow-md">
@@ -112,14 +114,17 @@ export default  function Add () {
             <input type="text" placeholder='File Name' value={FolderName} onChange={(e) => setFolderName(e.target.value)} className="input input-bordered w-full max-w-xs" />
             
             <p>Selected Folder:  {currentFolderSelected && currentFolderSelected.name &&  <span className="text-emerald-300">{currentFolderSelected.name}</span>}</p>
-            <button className="btn" onClick={()=> ManageOpen} >open Folder Stuct</button>
+            <button className="btn" onClick={()=>ManageOpen()
+
+          
+          }>open Folder Stuct</button>
             <dialog id="fold11" className="modal">
               <div className="modal-box">
                 <form method="dialog">
                   <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                 </form>
                 <FolderStructure currentFolderSelected={setCurrentFolderSelected} />
-                <button   onClick={()=>ManageClose}
+                <button   onClick={()=>ManageClose()}
                 className="btn btn-primary py-2 px-4 mt-4 w-full">Close</button>
               </div>
             </dialog>
