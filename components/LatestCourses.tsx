@@ -5,60 +5,60 @@ import Link from 'next/link';
 
 const LatestCourses: React.FC = () => {
 
-
   const [courses, setCourses] = useState([] as any);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState('');
+  
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         const { data: resourcesData, error: resourcesError } = await supabase
-        .from('Resources')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(5);
+          .from('Resources')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(5);
   
-      if (resourcesError) {
-        throw resourcesError;
-      }
+        if (resourcesError) {
+          throw resourcesError;
+        }
   
-      const folderIDs = resourcesData.map(resource => resource.FolderID);
-      const { data: foldersData, error: foldersError } = await supabase
-        .from('folders')
-        .select('*')
-        .in('FolderID', folderIDs);
+        const folderIDs = resourcesData.map(resource => resource.FolderID);
+        const { data: foldersData, error: foldersError } = await supabase
+          .from('folders')
+          .select('*')
+          .in('FolderID', folderIDs);
   
-      if (foldersError) {
-        throw foldersError;
-      }
-      foldersData.map(async folder => {
-        const { data: subfoldersData, error: subfoldersError } = await supabase
+        if (foldersError) {
+          throw foldersError;
+        }
+  
+        for (const folder of foldersData) {
+          const { data: subfoldersData, error: subfoldersError } = await supabase
           .from('folders')
           .select('*')
           .eq('FolderID', folder.ParentFolderID);  
-        if (subfoldersError) {
-          throw subfoldersError;
+
+          if (subfoldersError) {
+            throw subfoldersError;
+          }
+  
+          const { data: subfoldersData2, error: subfoldersError2 } = await supabase
+            .from('folders')
+            .select('*')
+            .eq('FolderID', subfoldersData[0].ParentFolderID);
+          if (subfoldersError2) {
+            throw subfoldersError2;
+          }
+
+          folder.SubFolder = `${subfoldersData2[0].FolderName} > ${subfoldersData[0].FolderName} > ${folder.FolderName}`;
         }
-
-        const { data: subfoldersData2, error: subfoldersError2 } = await supabase
-          .from('folders')
-          .select('*')
-          .eq('FolderID', subfoldersData[0].ParentFolderID);
-        if (subfoldersError2) {
-          throw subfoldersError2;
-        }
-        
-
-        folder.SubFolder = `${subfoldersData2[0].FolderName} > ${subfoldersData[0].FolderName} > ${folder.FolderName}`;
-        
-      })
-
-      const combinedData = resourcesData.map(resource => ({
-        ...resource,
-        folder: foldersData.find(folder => folder.FolderID === resource.FolderID),
-      }));
-      setCourses(combinedData);
+  
+        const combinedData = resourcesData.map(resource => ({
+          ...resource,
+          folder: foldersData.find(folder => folder.FolderID === resource.FolderID),
+        }));
+        setCourses(combinedData);
       } catch (error: any) {
         setError(true);
         setMessage(error.message);
@@ -66,10 +66,11 @@ const LatestCourses: React.FC = () => {
         setLoading(false);
       }
     };
-    
-    fetchCourses();
   
+    fetchCourses();
   }, []);
+  
+  
 
   
   
@@ -89,7 +90,7 @@ const LatestCourses: React.FC = () => {
            <h2 className="card-title">{course.ResourceName}</h2>
            <p>{new Date(course.created_at).toLocaleDateString()}</p>
            <p className='text-sm'>
-              {course.folder && course.folder.SubFolder ? course.folder.SubFolder : 'No Path'}
+              {course.folder && course.folder.SubFolder ? course.folder.SubFolder : course.folder.FolderName}
            </p >
            <div className="card-actions justify-end">
             <Link href={`${course.URL2}`}  target="_blank" key={course.ResourceID}> 
