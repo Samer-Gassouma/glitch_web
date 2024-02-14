@@ -32,12 +32,32 @@ const LatestCourses: React.FC = () => {
       if (foldersError) {
         throw foldersError;
       }
-  
+      foldersData.map(async folder => {
+        const { data: subfoldersData, error: subfoldersError } = await supabase
+          .from('folders')
+          .select('*')
+          .eq('FolderID', folder.ParentFolderID);  
+        if (subfoldersError) {
+          throw subfoldersError;
+        }
+
+        const { data: subfoldersData2, error: subfoldersError2 } = await supabase
+          .from('folders')
+          .select('*')
+          .eq('FolderID', subfoldersData[0].ParentFolderID);
+        if (subfoldersError2) {
+          throw subfoldersError2;
+        }
+        
+
+        folder.SubFolder = `${subfoldersData2[0].FolderName} > ${subfoldersData[0].FolderName} > ${folder.FolderName}`;
+        
+      })
+
       const combinedData = resourcesData.map(resource => ({
         ...resource,
         folder: foldersData.find(folder => folder.FolderID === resource.FolderID),
       }));
-    
       setCourses(combinedData);
       } catch (error: any) {
         setError(true);
@@ -68,8 +88,8 @@ const LatestCourses: React.FC = () => {
          <div className="card-body">
            <h2 className="card-title">{course.ResourceName}</h2>
            <p>{new Date(course.created_at).toLocaleDateString()}</p>
-           <p className='text-sm '>
-              folder : {course.folder && course.folder.FolderName ? course.folder.FolderName : 'No Path'}
+           <p className='text-sm'>
+              {course.folder && course.folder.SubFolder ? course.folder.SubFolder : 'No Path'}
            </p >
            <div className="card-actions justify-end">
             <Link href={`${course.URL2}`}  target="_blank" key={course.ResourceID}> 
