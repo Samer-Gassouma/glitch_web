@@ -1,26 +1,18 @@
 
-import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
 import LatestCourses from "@/components/LatestCourses";
 
 
 export default async function Index() {
-  const cookieStore = cookies();
 
- 
-
-  const supabase = createClient(cookieStore);
   
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
 
  
  
   return (
     <div className="flex-1 w-full flex flex-col items-center  bg-black">
       <div className="overflow-y-hidden h-screen flex-1">
-     {!user ? 
+         
+     {/*!user ? 
         <div className="flex items-center justify-center h-screen">
         <div className="flex flex-col items-center">
           <h1 className="text-6xl font-bold mb-4">Welcome to Glitch</h1>
@@ -42,9 +34,9 @@ export default async function Index() {
          
         </div>
       </div>
-        :
-        <LatestCourses />
+        :*/
       }
+      <LatestCourses />
       </div>
       <footer className="w-full border-t border-t-foreground/10 p-6 flex justify-center text-center text-xs fixed bottom-0 bg-black z-10">
         <p>
